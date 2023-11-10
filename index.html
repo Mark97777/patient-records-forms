@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hospital Project</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+     #successNotification {
+      position: fixed;
+      bottom: 0; /* Updated to show at the bottom */
+      right: 0;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Hospital Database System</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a onclick="generateReport()" class="nav-link active btn btn-primary btn-sm" aria-current="page" href="#">Generate report</a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+  <section class="container row">
+    <h1 class="">Patient History Forms</h1>
+    <br />
+    <form class="col-md-6" id="patientForm">
+      <div class="form-group">
+        <label for="patientName"><b>Name of patient</b></label>
+        <input class="form-control" id="patientName" type="text" placeholder="Patient name..." required />
+      </div>
+      <br />
+      <div class="form-group">
+        <label for="patientAge"><b>Age of patient</b></label>
+        <input class="form-control" id="patientAge" type="text" placeholder="Patient age..." required />
+      </div>
+      <br />
+      <div class="form-group">
+        <label for="patientResidence"><b>Residence of patient</b></label>
+        <input class="form-control" id="patientResidence" type="text" placeholder="Patient residence..." required />
+      </div>
+      <br />
+      <div class="form-group">
+        <label for="maritalStatus"><b>Marital status of patient</b></label>
+        <select id="maritalStatus" class="form-control" required >
+          <option value="">Select</option>
+          <option value="Married">Married</option>
+          <option value="Divorced">Divorced</option>
+          <option value="Single">Single</option>
+        </select>
+      </div>
+      <br />
+      <div class="form-group">
+        <label for="occupation"><b>Occupation of patient</b></label>
+        <input class="form-control" id="occupation" type="text" placeholder="Occupation of patient" required />
+      </div>
+      <br />
+      <button type="submit" onclick="saveFormData()" class="btn btn-primary">Submit</button>
+    </form>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    function saveFormData() {
+      var patientData = {
+        patientName: document.getElementById('patientName').value,
+        patientAge: document.getElementById('patientAge').value,
+        patientResidence: document.getElementById('patientResidence').value,
+        maritalStatus: document.getElementById('maritalStatus').value,
+        occupation: document.getElementById('occupation').value,
+      };
+
+      sessionStorage.setItem('patientData', JSON.stringify(patientData));
+
+      if (
+        patientData.patientName !== '' &&
+        patientData.patientAge !== '' &&
+        patientData.patientResidence !== '' &&
+        patientData.maritalStatus !== '' &&
+        patientData.occupation !== ''
+      ) {
+        // Show success notification
+		alert("Patient data has been saved.");
+      } else {
+        // Show nothing
+      }
+    }
+
+    function generateReport() {
+      var patientData = JSON.parse(sessionStorage.getItem('patientData'));
+
+      var reportContent = `
+        <html>
+        <head>
+          <title>Patient Report</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+            }
+          </style>
+        </head>
+        <body>
+		  <h1>Cape Coast Teaching Hospital</h1>
+          <h2>Patient Report</h2>
+		  
+          <p>The patient with name <strong>${patientData.patientName}</strong> is <strong>${patientData.patientAge}</strong> years of age.</p>
+          <p>Patient resides at <strong>${patientData.patientResidence}</strong> and is <strong>${patientData.maritalStatus}</strong>.</p>
+          <p>Our patient occupation is <strong>${patientData.occupation}</strong>.</p>
+        </body>
+        </html>
+      `;
+
+      var printWindow = window.open('', '_blank');
+      printWindow.document.open();
+      printWindow.document.write(reportContent);
+      printWindow.document.close();
+      printWindow.print();
+    }
+  </script>
+</body>
+</html>
